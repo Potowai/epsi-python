@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pokemon List</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'style/styles.css' %}">
+</head>
+<body>
+    <h1>Pokemon List</h1>
+    <ul>
+        {% for pokemon in pokemons %}
+            {% if pokemon %}
+                <li><a href="{% url 'pokemon_detail' name=pokemon.name %}">{{ pokemon.name }} {{pokemon.pokeid}} <img alt="{{pokemon.name}}" src="{{pokemon.image_url}}"/></a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
