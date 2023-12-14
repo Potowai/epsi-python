@@ -32,9 +32,8 @@
         </thead>
             {% for pokemon in pokemons %}
                 <tr>
-                    
                     <td><a class="link-light text-decoration-none" href="{% url 'pokemon_detail' pokeid=pokemon.pokeid %}">{{pokemon.pokeid}}</a></td>
-                    <td><a class="link-light text-decoration-none" href="{% url 'pokemon_detail' pokeid=pokemon.pokeid %}"><img alt="{{pokemon.name}}" src="{{pokemon.image_url}}"/></a></td>
+                    <td><a class="link-light text-decoration-none" href="{% url 'pokemon_detail' pokeid=pokemon.pokeid %}"><img alt="{{pokemon.name}}" src="{{pokemon.sprites.front_default}}"/></a></td>
                     <td><a class="link-light text-decoration-none" href="{% url 'pokemon_detail' pokeid=pokemon.pokeid %}">{{pokemon.name}}</a></td>
                     <td>
                         {% for type in pokemon.types %}

@@ -7,28 +7,52 @@ async def all_pokemon():
     async with httpx.AsyncClient() as httpx_client:
         response = await httpx_client.get(url)
         data = response.json()
-        pokemons = []
-        for result in data["results"]:
-            pokemons.append(Pokemon(
-                name=result['name'],
-                url="https://pokeapi.co/api/v2/pokemon/" + result['name'],
-                pokeid = result['url'].rstrip('/').split('/')[-1],
-                image_url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{result['url'].rstrip('/').split('/')[-1]}.png"
-                ))
+        pokemons = [{"name": result['name'], "url": result['url']} for result in data["results"]]
     return pokemons
 
 async def fetch_pokemon_by_search(search):
     all_pokemons = await all_pokemon()
-    return searchPokemons(all_pokemons, search)
+    return searchPokemons(all_pokemons[:1239], search)
 
+def findMostAccuratePokemons(pokemons, search):
+    def calculate_score(pokemon):
+        name = pokemon['name'].lower()
+        s = search.lower()
+        index = name.find(s)
+        if index == -1:
+            return 0
+        elif index == 0:
+            return len(s) / len(name)
+        else:
+            return len(s) / (len(name) + index)
+
+    scores = [calculate_score(pokemon) for pokemon in pokemons]
+
+    pokeScore = [{
+        'name': pokemon['name'],
+        'url': pokemon['url'],
+        'score': score
+    } for pokemon, score in zip(pokemons, scores)]
+    sortedPokemons = sorted(pokeScore, key=lambda x: x['score'], reverse=True)
+    return [pokemon for pokemon in sortedPokemons if pokemon['score'] > 0]
+
+def searchPokemons(pokemons, inputText, maxResults=20):
+    print("input text : ", inputText)
+    if inputText == "":
+        print("input text is empty")
+        return pokemons[:maxResults]
+    return findMostAccuratePokemons(pokemons, inputText)[:maxResults]
 
 async def import_pokemon_datav2(search=""):
     pokemons = []
     fetched = await fetch_pokemon_by_search(search)
+    print(type(fetched))
     if len(fetched) > 0 :
         # Limitation des appels à l'API pour les 20 premiers Pokémon
         async with httpx.AsyncClient() as httpx_client:
+            print("fetched : ", fetched[0])
             for i in range(0, len(fetched)):
+                print("fetched[i]['url'] : ", fetched[i]['url'])
                 pokemon_data = await httpx_client.get(fetched[i]['url'])
                 if pokemon_data.status_code == httpx.codes.OK:
                     pokemons.append(makePokemon(capitalize_json(pokemon_data.json())))      
@@ -82,32 +106,3 @@ def capitalize_json(json_data):
     else:
         return json_data
 
-def findMostAccuratePokemons(pokemons, search):
-    def calculate_score(pokemon):
-        name = pokemon.name.lower()
-        s = search.lower()
-        index = name.find(s)
-        if index == -1:
-            return 0
-        elif index == 0:
-            return len(s) / len(name)
-        else:
-            return len(s) / (len(name) + index)
-
-    scores = [calculate_score(pokemon) for pokemon in pokemons]
-
-    pokeScore = [{
-        'name': pokemon.name,
-        'url': pokemon.url,
-        'score': score
-    } for pokemon, score in zip(pokemons, scores)]
-    sortedPokemons = sorted(pokeScore, key=lambda x: x['score'], reverse=True)
-    print(sortedPokemons[0])
-    return [pokemon for pokemon in sortedPokemons if pokemon['score'] > 0]
-
-def searchPokemons(pokemons, inputText, maxResults=20):
-    print("input text : ", inputText)
-    if inputText == "":
-        print("input text is empty")
-        return pokemons[:maxResults]
-    return findMostAccuratePokemons(pokemons, inputText)[:maxResults]
