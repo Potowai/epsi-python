@@ -85,7 +85,6 @@ def makePokemon(pokemon_data):
     return Pokemon(
             name=pokemon_data["name"],
             pokeid = pokemon_data['id'],
-            description="Add your description here.",
             height=pokemon_data["height"],
             weight=pokemon_data["weight"],
             abilities=pokemon_data["abilities"],
@@ -93,8 +92,7 @@ def makePokemon(pokemon_data):
             moves=pokemon_data["moves"],
             stats=pokemon_data["stats"],
             sprites=pokemon_data["sprites"],
-            base_experience=pokemon_data["base_experience"],
-            image_url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemon_data['id']}.png")  
+            base_experience=pokemon_data["base_experience"])
 
 def capitalize_json(json_data):
     if isinstance(json_data, dict):
