@@ -12,5 +12,6 @@ class Pokemon(models.Model):
     stats = models.TextField(default="0")
     sprites = models.TextField(default="0")
     base_experience = models.TextField(default="0")
+    
     def __str__(self):
-        return self.name + " " + self.pokeid
+        return self.name

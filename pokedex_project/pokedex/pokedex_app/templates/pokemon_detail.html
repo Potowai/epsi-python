@@ -7,43 +7,43 @@
     <title>{{ pokemon.name }} Pokemon Information</title>
 </head>
 <body class="bg-dark text-white">
+    <style>
+        .pokemon-detail {
+    font-family: Arial, sans-serif;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-<div class="container mt-3">
-    <h1 class="display-4">{{ pokemon.name }} Pokemon Information</h1>
-    <div style="float:left;">
-        <img src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}" class="img-fluid">
-        <img src="{{ pokemon.sprites.back_default }}" alt="{{ pokemon.name }}" class="img-fluid">
-        <h2>Types:</h2>
-        {% for type in pokemon.types %}
-            <img src="https://play.pokemonshowdown.com/sprites/types/{{ type.type.name }}.png" alt="{{ type.type.name }}">
-        {% endfor %}
-        <h2>Size:</h2>
-        <p>Height: {{ pokemon.height }}0 cm</p>
-        <p>Weight: {{ pokemon.weight }}00 g</p>
+.pokemon-detail h1 {
+    text-align: center;
+}
+
+.pokemon-detail img {
+    display: block;
+    margin: 0 auto;
+}
+
+.pokemon-stats {
+    margin-top: 20px;
+}
+
+    </style>
     
-        <h2 class="mt-4">Stats:</h2>
-        <ul class="list-group">
-            {% for stat in pokemon.stats %}
-                <li class="list-group-item">{{ stat.stat.name }}: {{ stat.base_stat }} <div style=""></div></li>
+    <div class="pokemon-detail">
+        <h1>{{ pokemon.name | capfirst }} (#{{ pokemon.pokeid }})</h1>
+        <img src="{{ pokemon.sprites }}" alt="{{ pokemon.name }} sprite"/>
+        <p>Height: {{ pokemon.height }} dm</p>
+        <p>Weight: {{ pokemon.weight }} hg</p>
+        <p>Base Experience: {{ pokemon.base_experience }}</p>
+        <p>Abilities: {% for ability in pokemon.abilities %} {{ability}} {% endfor %}</p>
+        <p>Types: {{ pokemon.types}}</p>
+        <p>Moves: {{ pokemon.moves}}</p>
+        <div class="pokemon-stats">
+            {% for stat, value in pokemon.stats.items %}
+                <p>{{ stat | capfirst }}: {{ value }}</p>
             {% endfor %}
-        </ul>
-        <h2 class="mt-4">Abilities:</h2>
-        <ul class="list-group">
-            {% for ability in pokemon.abilities %}
-                <li class="list-group-item"><a href="{{ability.ability.url}}"> {{ability.ability.name }} (Hidden: {{ ability.is_hidden }})</a></li>
-            {% endfor %}
-        </ul>
-    </div>
-
-
-
-
-    <h2 class="mt-4">Moves:</h2>
-    <ul class="list-group">
-        {% for move in pokemon.moves %}
-            <li class="list-group-item" style="float: right;">{{ move.move.name }} (Learned at Level {{ move.version_group_details.0.level_learned_at }})</li>
-        {% endfor %}
-    </ul>
-</div>
+        </div>
 </body>
 </html>

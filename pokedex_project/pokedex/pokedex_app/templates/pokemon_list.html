@@ -6,12 +6,11 @@
 </head>
 <body class="bg-dark text-white text-center ">
     <h1>Pokemon List</h1>
-    <form action="{% url 'pokemon_list'%}" method="GET">
-        <input type="text" name="search" placeholder="Search by name">
-        <input type="submit" value="Search">   
-    </form>
+    <div class="search-box">
+        <input type="text" id="searchInput" onkeyup="searchPokemon()" placeholder="Rechercher un Pokémon...">
+    </div>
     {% if pokemons %}
-    <table class="table table-hover table-dark text-center w-50 d-inline justify-content-center align-middle">
+    <table id="pokemonList" class="table table-hover table-dark text-center w-50 d-inline justify-content-center align-middle">
         <thead>
             <tr>
                 <th rowspan="2">Id</th>
@@ -31,13 +30,13 @@
             </tr>
         </thead>
             {% for pokemon in pokemons %}
-                <tr>
-                    <td><a class="link-light text-decoration-none" href="{% url 'pokemon_detail' pokeid=pokemon.pokeid %}">{{pokemon.pokeid}}</a></td>
-                    <td><a class="link-light text-decoration-none" href="{% url 'pokemon_detail' pokeid=pokemon.pokeid %}"><img alt="{{pokemon.name}}" src="{{pokemon.sprites.front_default}}"/></a></td>
-                    <td><a class="link-light text-decoration-none" href="{% url 'pokemon_detail' pokeid=pokemon.pokeid %}">{{pokemon.name}}</a></td>
+                <tr class="pokemon-item">
+                    <td><a class="link-light text-decoration-none" href="{% url 'pokemon_detail' name=pokemon.name %}">{{pokemon.pokeid}}</a></td>
+                    <td><a class="link-light text-decoration-none" href="{% url 'pokemon_detail' name=pokemon.name %}"><img alt="{{pokemon.name}}" src="{{pokemon.sprites.front_default}}"/></a></td>
+                    <td><a class="link-light text-decoration-none" href="{% url 'pokemon_detail' name=pokemon.name %}"><span>{{pokemon.name | capfirst}}</span></a></td>
                     <td>
                         {% for type in pokemon.types %}
-                            <img src="https://play.pokemonshowdown.com/sprites/types/{{ type.type.name }}.png" alt="{{ type.type.name }}">
+                            <img src="https://play.pokemonshowdown.com/sprites/types/{{ type.type.name | capfirst }}.png" alt="{{ type.type.name }}">
                         {% endfor %}
                     </td>
                     <td>
@@ -55,6 +54,26 @@
     {% else %}
     <span>Aucun Pokemon trouvé</span>
     {% endif %}
+    <script>
+        // Fonction de recherche pour filtrer la liste des Pokémon
+        function searchPokemon() {
+            var input, filter, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("pokemonList");
+            tr = table.getElementsByClassName("pokemon-item")
+
+            for (i = 0; i < tr.length; i++) {
+                span = tr[i].getElementsByTagName("span")[0];
+                txtValue = span.textContent || span.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>
 </body>
 </html>
 
