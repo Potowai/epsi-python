@@ -3,47 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <title>{{ pokemon.name }} Pokemon Information</title>
-</head>
-<body class="bg-dark text-white">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Pokémon Information</title>
     <style>
-        .pokemon-detail {
-    font-family: Arial, sans-serif;
-    width: 80%;
-    margin: 0 auto;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.pokemon-detail h1 {
-    text-align: center;
-}
-
-.pokemon-detail img {
-    display: block;
-    margin: 0 auto;
-}
-
-.pokemon-stats {
-    margin-top: 20px;
-}
-
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .container{
+            width: 600px;
+        }
+        .pokemon-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .pokemon-image {
+            width: 130px;
+            height: auto;
+        }
+        .pokemon-stats {
+            margin-top: 20px;
+        }
+        .pokemon-stats div {
+            display: flex;
+            width: 85%;
+            align-items: flex-end;
+        }
+        .progress {
+            width: 100%;
+            height: 20px;
+            background-color: #ddd;
+        }
+        .stat-bar {
+            height: 20px;
+            border-radius: 5px;
+        }
+        .pokemon-type {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: #f8cecc;
+            color: #b85450;
+            margin-right: 4px;
+            font-size: 0.9em;
+        }
+        .pokemon-ability {
+            font-size: 0.9em;
+            margin-right: 4px;
+            color: #555;
+        }
+        .pokemon-evolution {
+            margin-top: 10px;
+        }
+        .pokemon-evolution img {
+            width: 48px;
+            height: 48px;
+        }
+        .badge {
+            font-size: 0.8em;
+        }
     </style>
-    
-    <div class="pokemon-detail">
-        <h1>{{ pokemon.name | capfirst }} (#{{ pokemon.pokeid }})</h1>
-        <img src="{{ pokemon.sprites }}" alt="{{ pokemon.name }} sprite"/>
-        <p>Height: {{ pokemon.height }} dm</p>
-        <p>Weight: {{ pokemon.weight }} hg</p>
-        <p>Base Experience: {{ pokemon.base_experience }}</p>
-        <p>Abilities: {% for ability in pokemon.abilities %} {{ability}} {% endfor %}</p>
-        <p>Types: {{ pokemon.types}}</p>
-        <p>Moves: {{ pokemon.moves}}</p>
-        <div class="pokemon-stats">
-            {% for stat, value in pokemon.stats.items %}
-                <p>{{ stat | capfirst }}: {{ value }}</p>
-            {% endfor %}
+</head>
+<body class="bg-dark">
+    <div class="container">
+        <div class="card">
+            <div>
+                <div class="pokemon-header">
+                    <h1>{{pokemon.name | capfirst}} #{{pokemon.pokeid}}</h1>
+                    <img class="pokemon-image" src="{{pokemon.sprites.front_default}}" alt="sprite">
+                </div>
+                {% for type in pokemon.types %}
+                    <img src="https://play.pokemonshowdown.com/sprites/types/{{ type.type.name | capfirst }}.png" alt="{{ type.type.name }}">
+                {% endfor %}
+            </div>
+        <div>
+                
+                {% for ability in pokemon.abilities %}
+                    <span class="pokemon-ability">{{ability.ability.name | capfirst}}</span>
+                    {% if ability.is_hidden %}<span class="badge bg-secondary">(H)</span>{% endif %}
+                {% endfor %}
+            </div>
+            <div class="pokemon-stats">
+                {% for stats in pokemon.stats %}
+                        <div>
+                            <div class="justify-content-end"><span>{{ stats.stat.name | capfirst }}:  </span></div>
+                            <div>
+                                <div class="stat-bar bg-success" style="width: {{stats.base_stat}}px;"></div>
+                                <span><bold>{{stats.base_stat}}</bold></span>
+                            </div>
+                        </div>
+                {% endfor %}
+            </div>
+            <div class="pokemon-evolution">
+                <p>Evolution: Pichu → Pikachu → Raichu</p>
+                <!-- Add evolution images here -->
+            </div>
+            <div>
+                <span class="badge bg-secondary">Base</span>
+                <!-- Add other forms badges here -->
+            </div>
+            <p>Egg groups: Field, Fairy</p>
+            <p>Gender ratio: 50% male, 50% female</p>
         </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

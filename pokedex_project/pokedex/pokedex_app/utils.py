@@ -18,15 +18,17 @@ def get_pokemon_by_name(_name):
         pokemon_data = response.json()
         pokemon = Pokemon(
             name=pokemon_data["name"],
+            url_link = url,
             pokeid = pokemon_data['id'],
-            height=pokemon_data["height"],
-            weight=pokemon_data["weight"],
-            abilities = [ability['ability']['name'] for ability in pokemon_data["abilities"]],
-            types = [ptype['type']['name'] for ptype in pokemon_data["types"]],
-            moves = [move['move']['name'] for move in pokemon_data["moves"]],
-            stats = {stat['stat']['name']: stat['base_stat'] for stat in pokemon_data["stats"]},
-            sprites = pokemon_data["sprites"]["front_default"],
+            height=pokemon_data["height"]*0.1,
+            weight=pokemon_data["weight"]*0.1,
+            abilities = pokemon_data["abilities"],
+            types = pokemon_data["types"],
+            moves = pokemon_data["moves"],
+            stats = pokemon_data["stats"],
+            sprites = pokemon_data["sprites"],
             base_experience=pokemon_data["base_experience"])
         pokemon.save()
+        
         print("Pokemon added to database")
     return pokemon

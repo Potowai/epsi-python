@@ -1,17 +1,18 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 class Pokemon(models.Model):
-    pokeid = models.TextField(default="0")
-    name = models.CharField(max_length=100)
-    url_link = models.URLField(default="https://play.pokemonshowdown.com/teambuilder")
-    height = models.TextField(default="0")
-    weight = models.TextField(default="0")
-    abilities = models.TextField(default="0")
-    types = models.TextField(default="0")
-    moves = models.TextField(default="0")
-    stats = models.TextField(default="0")
-    sprites = models.TextField(default="0")
-    base_experience = models.TextField(default="0")
+    pokeid = models.IntegerField()
+    name = models.TextField()
+    url_link = models.URLField(default="https://blob:https://imgur.com/0")
+    height = models.FloatField()
+    weight = models.FloatField()
+    abilities = models.JSONField()
+    types = models.JSONField()
+    moves = models.JSONField()
+    stats = models.JSONField()
+    sprites = models.JSONField()
+    base_experience = models.SmallIntegerField()
     
     def __str__(self):
         return self.name
